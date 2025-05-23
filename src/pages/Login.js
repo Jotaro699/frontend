@@ -475,7 +475,26 @@ function Login() {
 
       localStorage.setItem("token", res.data.access_token);
       localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = "/admin";
+      // window.location.href = "/admin";
+      let redirectPath = "/";
+      switch (user.role) {
+        case "admin":
+          redirectPath = "/admin";
+          break;
+        case "enseignant":
+          redirectPath = "/enseignant";
+          break;
+        case "etudiant":
+          redirectPath = "/etudiant";
+          break;
+        case "parent":
+          redirectPath = "/parent";
+          break;
+        default:
+          redirectPath = "/";
+      }
+      window.location.href = redirectPath;
+
     } catch (err) {
       setErrorMessage(
         "Erreur de connexion. Veuillez vérifier vos identifiants."

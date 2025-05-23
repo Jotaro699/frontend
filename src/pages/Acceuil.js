@@ -454,7 +454,7 @@ const Accueil = () => {
             plein potentiel.
           </p>
           <button
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/register?role=etudiant")}
             className="bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700 transition"
           >
             Inscrire votre enfant

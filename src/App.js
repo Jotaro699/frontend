@@ -136,10 +136,26 @@ import GestionEtudiants from "./pages/admin/GestionEtudiants";
 import GestionEnseignants from "./pages/admin/GestionEnseignants";
 import GestionParents from "./pages/admin/GestionParents";
 import GestionMatiers from "./pages/admin/GestionMatieres";
+import GestionCours from "./pages/admin/GestionCours";
+import Profil from "./pages/Profil";
 import ChoisirRoleFamille from "./pages/ChoisirRoleFamille";
 import AboutUs from "./components/AboutUs";
+import Contact from "./components/Contact";
 import AdminLayout from "./pages/AdminLayout";
-import AcceuilAdmin from "./pages/admin/AcceuilAdmin"
+import AcceuilAdmin from "./pages/admin/AcceuilAdmin";
+
+//enseignant 
+import SaisieNotes from "./pages/enseignant/SaisieNotes";
+import MatieresAssignees from "./pages/enseignant/MatieresAssignees";
+import ClassesEnseignant from "./pages/enseignant/ClassesEnseignant";
+
+
+//etudiant 
+import MesResultats from "./pages/etudiant/MesResultats";
+
+//parent 
+import ResultatsEnfants from "./pages/parent/ResultatsEnfants";
+
 
 function App() {
   return (
@@ -149,17 +165,38 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/choisir" element={<Choisirespace />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/Contact" element={<Contact />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/choisir-role-famille" element={<ChoisirRoleFamille />} />
         {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         {/* Admin Layout avec Sidebar persistante */}
         <Route path="/admin" element={<Dashboard />}>
           <Route index element={<AcceuilAdmin />} />
+          <Route path="profile" element={<Profil />} />
           <Route path="Acceuil" element={<AcceuilAdmin />} />
           <Route path="etudiants" element={<GestionEtudiants />} />
           <Route path="enseignants" element={<GestionEnseignants />} />
           <Route path="parents" element={<GestionParents />} />
           <Route path="matieres" element={<GestionMatiers />} />
+          <Route path="cours" element={<GestionCours />} />
+        </Route>
+
+        <Route path="/enseignant" element={<Dashboard />}>
+          {/* Routes enseignant */}
+          <Route path="profile" element={<Profil />} />
+          <Route path="SaisirNotes" element={<SaisieNotes />} />
+          <Route path="Matiers" element={<MatieresAssignees />} />
+          <Route path="ClassesEnseignant" element={<ClassesEnseignant />} />
+        </Route>
+        <Route path="/etudiant" element={<Dashboard />}>
+          {/* Routes étudiant */}
+          <Route path="profile" element={<Profil />} />
+          <Route path="MesResultats" element={<MesResultats />} />
+        </Route>
+        <Route path="/parent" element={<Dashboard />}>
+          {/* Routes parent */}
+          <Route path="profile" element={<Profil />} />
+          <Route path="ResultatsEnfants" element={<ResultatsEnfants />} />
         </Route>
       </Routes>
     </Router>

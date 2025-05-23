@@ -158,7 +158,7 @@
 // };
 
 // export default Sidebar;
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -169,6 +169,7 @@ import {
   GraduationCapIcon,
   FileTextIcon,
   CreditCardIcon,
+  NotebookIcon,
   LogOutIcon,
   Users,
   BookOpen,
@@ -178,11 +179,28 @@ import {
   Download,
 } from "lucide-react";
 
-
-
 const Sidebar = ({ role }) => {
   const location = useLocation();
+  const [profileImage, setProfileImage] = useState(
+    "https://www.w3schools.com/howto/img_avatar.png"
+  );
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const userEmail = storedUser?.email || "user@ecole.fr";
 
+  useEffect(() => {
+    if (storedUser?.role === "etudiant") {
+      fetch(`http://localhost:8000/api/etudiants/by-user/${storedUser.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.photo_identite) {
+            setProfileImage(
+              `http://localhost:8000/storage/${data.photo_identite}`
+            );
+          }
+        })
+        .catch((err) => console.error("Erreur photo:", err));
+    }
+  }, []);
   // Sécuriser le rôle s'il est undefined
   const safeRole = role || "utilisateur";
 
@@ -195,16 +213,25 @@ const Sidebar = ({ role }) => {
         icon: <LayoutDashboardIcon size={20} />,
         path: "/admin/Acceuil",
       },
-      { name: "Matières", icon: <BookOpenIcon size={20} />, path: "/admin/matieres" },
+      {
+        name: "Étudiants",
+        icon: <GraduationCapIcon size={20} />,
+        path: "/admin/etudiants",
+      },
       {
         name: "Enseignants",
         icon: <UsersIcon size={20} />,
         path: "/admin/enseignants",
       },
       {
-        name: "Étudiants",
-        icon: <GraduationCapIcon size={20} />,
-        path: "/admin/etudiants",
+        name: "Matières",
+        icon: <BookOpenIcon size={20} />,
+        path: "/admin/matieres",
+      },
+      {
+        name: "Cours", // ✅ cours ajouté ici
+        icon: <NotebookIcon size={20} />,
+        path: "/admin/cours",
       },
       { name: "Rapports", icon: <FileTextIcon size={20} />, path: "/reports" },
       {
@@ -215,22 +242,45 @@ const Sidebar = ({ role }) => {
     );
   } else if (safeRole === "enseignant") {
     navigationItems.push(
-      { name: "Saisir les notes", path: "#", icon: <FileText size={20} /> },
-      { name: "Liste des étudiants", path: "#", icon: <Users size={20} /> },
-      { name: "Matières assignées", path: "#", icon: <BookOpen size={20} /> }
+      {
+        name: "Saisir les notes",
+        path: "/enseignant/SaisirNotes",
+        icon: <FileText size={20} />,
+      },
+      {
+        name: "Liste des étudiants",
+        path: "/enseignant/ClassesEnseignant",
+        icon: <Users size={20} />,
+      },
+      {
+        name: "Matières assignées",
+        path: "/enseignant/Matiers",
+        icon: <BookOpen size={20} />,
+      }
     );
   } else if (safeRole === "etudiant") {
     navigationItems.push(
-      { name: " Mes résultats", route: "#", icon: <FileText size={20} /> },
-      {name: "Mes Cours",icon: <BookOpenIcon size={20} />,path: "/my-courses"},
+      {
+        name: " Mes résultats",
+        path: "/etudiant/MesResultats",
+        icon: <FileText size={20} />,
+      },
+      {
+        name: "Mes Cours",
+        icon: <BookOpenIcon size={20} />,
+        path: "/my-courses",
+      },
       { name: "Télécharger rapports", route: "#", icon: <Download size={20} /> }
     );
   } else if (safeRole === "parent") {
     navigationItems.push(
-
-      { name: "Résultats enfant", route: "#", icon: <Eye size={20} /> },
+      {
+        name: "Résultats enfant",
+        path: "/parent/ResultatsEnfants",
+        icon: <Eye size={20} />,
+      },
       { name: "Paiement frais", route: "#", icon: <CreditCard size={20} /> },
-      { name: "Télécharger factures",route: "#",icon: <Download size={20} />}
+      { name: "Télécharger factures", route: "#", icon: <Download size={20} /> }
     );
   }
 
@@ -250,13 +300,15 @@ const navigate = useNavigate();
     >
       {/* Avatar */}
       <div className="text-center mb-3">
-        <img
-          src="https://www.w3schools.com/howto/img_avatar.png"
-          alt="Avatar utilisateur"
-          className="rounded-circle border border-light"
-          width="80"
-          height="80"
-        />
+        <Link to={`/${safeRole}/profile`}>
+          <img
+            src={profileImage}
+            alt="Avatar utilisateur"
+            className="rounded-circle border border-light cursor-pointer hover:opacity-80 transition"
+            width="80"
+            height="80"
+          />
+        </Link>
       </div>
 
       {/* Titre utilisateur */}
@@ -278,11 +330,11 @@ const navigate = useNavigate();
                     ? "bg-dark fw-semibold"
                     : "hover:bg-opacity-10"
                 }`}
-              // <Link
-              //   to={item.path}
-              //   className={`nav-link text-white d-flex align-items-center py-2 px-3 rounded ${
-              //     location.pathname === item.path ? "bg-dark fw-semibold" : ""
-              //   }`}
+                // <Link
+                //   to={item.path}
+                //   className={`nav-link text-white d-flex align-items-center py-2 px-3 rounded ${
+                //     location.pathname === item.path ? "bg-dark fw-semibold" : ""
+                //   }`}
               >
                 <span className="me-2">{item.icon}</span>
                 {item.name}
@@ -307,7 +359,8 @@ const navigate = useNavigate();
             <p className="mb-0 fw-medium">
               {safeRole.charAt(0).toUpperCase() + safeRole.slice(1)}
             </p>
-            <small className="text-white-50">user@ecole.fr</small>
+            {/* <small className="text-white-50">user@ecole.fr</small> */}
+            <small className="text-white-50">{userEmail}</small>
           </div>
         </div>
 

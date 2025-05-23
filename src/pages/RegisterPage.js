@@ -600,12 +600,318 @@
 // }
 
 // export default RegisterPage;
+//lastt
+// import React, { useState, useEffect } from "react";
+// import { useLocation } from "react-router-dom";
+// import { register } from "../services/api";
+
+// function RegisterPage() {
+//   const location = useLocation();
+//   const queryRole = new URLSearchParams(location.search).get("role");
+
+//   const [form, setForm] = useState({
+//     prenom: "",
+//     nom: "",
+//     date_naissance: "",
+//     genre: "",
+//     adresse: "",
+//     telephone: "",
+//     email: "",
+//     password: "",
+//     confirmPassword: "",
+//     role: "etudiant",
+
+//     // Champs spécifiques
+//     cne: "",
+//     classe: "",
+//     acte_naissance: null,
+//     photo_identite: null,
+//     parent_id: "",
+
+//     specialite: "",
+//     grade: "",
+//     cin: "",
+
+//     profession: "",
+//     etudiant_cne: "",
+//   });
+
+//   const [successMessage, setSuccessMessage] = useState("");
+//   const [errorMessage, setErrorMessage] = useState("");
+
+//   useEffect(() => {
+//     if (queryRole) {
+//       setForm((prev) => ({ ...prev, role: queryRole }));
+//     }
+//   }, [queryRole]);
+
+//   const handleChange = (e) => {
+//     const { name, value, type, files } = e.target;
+//     setForm({ ...form, [name]: type === "file" ? files[0] : value });
+    
+//   };
+
+//   const handleSubmit = async () => {
+//     if (form.password !== form.confirmPassword) {
+//       setErrorMessage("Les mots de passe ne correspondent pas.");
+//       return;
+//     }
+
+//     const formData = new FormData();
+//     Object.entries(form).forEach(([key, value]) => {
+//       if (value !== null && value !== "") {
+//         formData.append(key, value);
+//       }
+//     });
+
+//     try {
+//       const res = await register(formData);
+//       if (res && res.token) {
+//         setSuccessMessage("Inscription réussie !");
+//         setErrorMessage("");
+//         localStorage.setItem("token", res.token);
+//       } else {
+//         const msg = res?.errors
+//           ? Object.values(res.errors).flat().join(" / ")
+//           : JSON.stringify(res);
+//         setErrorMessage("Erreur d'inscription : " + msg);
+//         setSuccessMessage("");
+//       }
+//     } catch (error) {
+//       setErrorMessage("Erreur d'inscription : " + error.message);
+//       setSuccessMessage("");
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+//       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl">
+//         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+//           Inscription
+//         </h2>
+
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//           <input
+//             name="prenom"
+//             placeholder="Prénom"
+//             onChange={handleChange}
+//             className="input"
+//           />
+//           <input
+//             name="nom"
+//             placeholder="Nom"
+//             onChange={handleChange}
+//             className="input"
+//           />
+
+//           <input
+//             name="date_naissance"
+//             type="date"
+//             onChange={handleChange}
+//             className="input"
+//           />
+
+//           <div className="flex items-center space-x-4">
+//             <label className="text-gray-700">Genre :</label>
+//             <label>
+//               <input
+//                 type="radio"
+//                 name="genre"
+//                 value="homme"
+//                 onChange={handleChange}
+//                 checked={form.genre === "homme"}
+//               />
+//               Homme
+//             </label>
+//             <label>
+//               <input
+//                 type="radio"
+//                 name="genre"
+//                 value="femme"
+//                 onChange={handleChange}
+//                 checked={form.genre === "femme"}
+//               />
+//               Femme
+//             </label>
+//           </div>
+
+//           <input
+//             name="adresse"
+//             placeholder="Adresse complète"
+//             onChange={handleChange}
+//             className="input"
+//           />
+//           <input
+//             name="telephone"
+//             placeholder="Téléphone"
+//             onChange={handleChange}
+//             className="input"
+//           />
+//           <input
+//             name="email"
+//             type="email"
+//             placeholder="Email"
+//             onChange={handleChange}
+//             className="input"
+//           />
+//           <input
+//             name="password"
+//             type="password"
+//             placeholder="Mot de passe"
+//             onChange={handleChange}
+//             className="input"
+//           />
+//           <input
+//             name="confirmPassword"
+//             type="password"
+//             placeholder="Confirmer le mot de passe"
+//             onChange={handleChange}
+//             className="input"
+//           />
+
+//           {/* Étudiant */}
+//           {form.role === "etudiant" && (
+//             <>
+//               <input
+//                 name="cne"
+//                 placeholder="CNE"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <input
+//                 name="classe"
+//                 placeholder="Classe"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <input
+//                 name="parent_id"
+//                 placeholder="ID du parent (facultatif)"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <div>
+//                 <label>Acte de naissance :</label>
+//                 <input
+//                   type="file"
+//                   name="acte_naissance"
+//                   onChange={handleChange}
+//                   className="input"
+//                 />
+//               </div>
+//               <div>
+//                 <label>Photo d'identité :</label>
+//                 <input
+//                   type="file"
+//                   name="photo_identite"
+//                   onChange={handleChange}
+//                   className="input"
+//                 />
+//               </div>
+//             </>
+//           )}
+
+//           {/* Enseignant */}
+//           {form.role === "enseignant" && (
+//             <>
+//               <input
+//                 name="specialite"
+//                 placeholder="Spécialité"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <input
+//                 name="grade"
+//                 placeholder="Grade"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <input
+//                 name="cin"
+//                 placeholder="CIN"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <div className="mb-2">
+//                 <label>CV (PDF ou Image)</label>
+//                 <input
+//                   type="file"
+//                   name="cv"
+//                   onChange={handleChange}
+//                   className="form-control"
+//                 />
+//               </div>
+//             </>
+//           )}
+
+//           {/* Parent */}
+//           {form.role === "parent" && (
+//             <>
+//               <input
+//                 name="profession"
+//                 placeholder="Profession"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <input
+//                 name="cin"
+//                 placeholder="CIN"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//               <input
+//                 name="etudiant_cne"
+//                 placeholder="CNE de l'étudiant"
+//                 onChange={handleChange}
+//                 className="input"
+//               />
+//             </>
+//           )}
+//         </div>
+
+//         {!queryRole && (
+//           <div className="mt-4">
+//             <label className="block text-sm font-medium text-gray-700">
+//               Rôle
+//             </label>
+//             <select name="role" onChange={handleChange} className="input mt-1">
+//               <option value="etudiant">Étudiant</option>
+//               <option value="enseignant">Enseignant</option>
+//               <option value="parent">Parent</option>
+//             </select>
+//           </div>
+//         )}
+
+//         <button
+//           onClick={handleSubmit}
+//           className="w-full bg-blue-600 text-white py-2 rounded-lg mt-6 hover:bg-blue-700 transition"
+//         >
+//           S'inscrire
+//         </button>
+
+//         {successMessage && (
+//           <p className="text-green-600 text-center mt-4 font-semibold">
+//             {successMessage}
+//           </p>
+//         )}
+//         {errorMessage && (
+//           <p className="text-red-600 text-center mt-4 font-semibold">
+//             {errorMessage}
+//           </p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default RegisterPage;
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { register } from "../services/api";
 
 function RegisterPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryRole = new URLSearchParams(location.search).get("role");
 
   const [form, setForm] = useState({
@@ -625,7 +931,6 @@ function RegisterPage() {
     classe: "",
     acte_naissance: null,
     photo_identite: null,
-    parent_id: "",
 
     specialite: "",
     grade: "",
@@ -647,7 +952,6 @@ function RegisterPage() {
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     setForm({ ...form, [name]: type === "file" ? files[0] : value });
-    
   };
 
   const handleSubmit = async () => {
@@ -668,7 +972,10 @@ function RegisterPage() {
       if (res && res.token) {
         setSuccessMessage("Inscription réussie !");
         setErrorMessage("");
-        localStorage.setItem("token", res.token);
+        setTimeout(() => {
+          navigate(`/login?role=${form.role}`);
+        }, 5000);
+                localStorage.setItem("token", res.token);
       } else {
         const msg = res?.errors
           ? Object.values(res.errors).flat().join(" / ")
@@ -702,14 +1009,12 @@ function RegisterPage() {
             onChange={handleChange}
             className="input"
           />
-
           <input
             name="date_naissance"
             type="date"
             onChange={handleChange}
             className="input"
           />
-
           <div className="flex items-center space-x-4">
             <label className="text-gray-700">Genre :</label>
             <label>
@@ -733,7 +1038,6 @@ function RegisterPage() {
               Femme
             </label>
           </div>
-
           <input
             name="adresse"
             placeholder="Adresse complète"
@@ -780,12 +1084,6 @@ function RegisterPage() {
               <input
                 name="classe"
                 placeholder="Classe"
-                onChange={handleChange}
-                className="input"
-              />
-              <input
-                name="parent_id"
-                placeholder="ID du parent (facultatif)"
                 onChange={handleChange}
                 className="input"
               />
@@ -888,11 +1186,23 @@ function RegisterPage() {
           S'inscrire
         </button>
 
+        {/* ✅ Lien vers la page de login */}
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Vous avez déjà un compte ?{" "}
+          <Link
+            to={`/login?role=${form.role}`}
+            className="text-blue-600 hover:underline"
+          >
+            Connectez-vous ici
+          </Link>
+        </p>
+
         {successMessage && (
-          <p className="text-green-600 text-center mt-4 font-semibold">
+          <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded text-center transition">
             {successMessage}
-          </p>
+          </div>
         )}
+
         {errorMessage && (
           <p className="text-red-600 text-center mt-4 font-semibold">
             {errorMessage}
